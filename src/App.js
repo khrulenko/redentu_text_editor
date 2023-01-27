@@ -1,5 +1,8 @@
+import { useEffect, useState } from 'react';
+import TextEditor from './components/TextEditor';
+
 function App() {
-  return <div>TEXT EDITOR</div>;
+  return <TextEditor />;
 }
 
 export default App;

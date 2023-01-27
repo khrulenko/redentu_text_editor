@@ -4,5 +4,7 @@
 
 Used technologies:
 
+- HTML
+- CSS
 - JavaScript
 - React
