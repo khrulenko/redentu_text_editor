@@ -1,16 +1,14 @@
 import TextEditor from './components/TextEditor';
 import MainLayout from './components/MainLayout';
-import { Button } from '@mui/material';
+import { Button, Dialog, DialogTitle } from '@mui/material';
 import { getJsonFromNodes } from './utils';
+import useDisclosure from './hooks/useDisclosure';
 
 function App() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const additionalButton = (
-    <Button
-      onClick={() => {
-        console.log(getJsonFromNodes());
-      }}
-      color="success"
-    >
+    <Button onClick={onOpen} color="success">
       Get JSON
     </Button>
   );
@@ -18,6 +16,11 @@ function App() {
   return (
     <MainLayout>
       <TextEditor additionalButton={additionalButton} />
+
+      <Dialog open={isOpen} onClose={onClose}>
+        <DialogTitle>Your JSON is done</DialogTitle>
+        {JSON.stringify(getJsonFromNodes())}
+      </Dialog>
     </MainLayout>
   );
 }
