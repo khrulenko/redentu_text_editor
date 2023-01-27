@@ -45,7 +45,7 @@ const TextEditor = ({ additionalButton }) => {
   const [startNodeIndex, startNodeIndexSet] = useState();
   const [endNodeIndex, endNodeIndexSet] = useState();
 
-  const isThereSelectedNodes = !!selectedNodes.length & !range.collapsed;
+  const isThereSelectedNodes = !!selectedNodes?.length & !range?.collapsed;
 
   const startOffset = range?.startOffset;
   const endOffset = range?.endOffset;
