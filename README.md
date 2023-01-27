@@ -8,3 +8,4 @@ Used technologies:
 - CSS
 - JavaScript
 - React
+- Material UI

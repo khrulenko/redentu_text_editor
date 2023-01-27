@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Button, Paper, Stack } from '@mui/material';
 import {
   divideString,
   removeDuplicatedStyles,
@@ -155,20 +156,26 @@ const TextEditor = () => {
   };
 
   const processFontWeight = processTextStyle('fontWeight');
-  const processFontSize = processTextStyle('fontSize');
+  const processFontStyle = processTextStyle('fontStyle');
+  const processTextDecoration = processTextStyle('textDecoration');
 
   return (
-    <>
-      <button onClick={() => processFontWeight('bold')}>bold</button>
-      <button onClick={() => processFontSize('24px')}>size</button>
+    <Stack>
+      <Stack spacing={1} p={3} direction="row">
+        <Button onClick={() => processFontWeight('bold')}>bold</Button>
+        <Button onClick={() => processFontStyle('italic')}>italic</Button>
+        <Button onClick={() => processTextDecoration('underline')}>
+          underline
+        </Button>
+      </Stack>
 
-      <div
+      <Paper
         id="editor"
         contentEditable
         onMouseUp={handleMouseUp}
         onInput={handleInput}
       />
-    </>
+    </Stack>
   );
 };
 
