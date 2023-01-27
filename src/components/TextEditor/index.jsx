@@ -38,7 +38,7 @@ const handleInput = (e) => {
   }
 };
 
-const TextEditor = () => {
+const TextEditor = ({ additionalButton }) => {
   const [parentNode, parentNodeSet] = useState();
   const [range, rangeSet] = useState();
   const [selectedNodes, selectedNodesSet] = useState([]);
@@ -161,12 +161,16 @@ const TextEditor = () => {
 
   return (
     <Stack>
-      <Stack spacing={1} p={3} direction="row">
-        <Button onClick={() => processFontWeight('bold')}>bold</Button>
-        <Button onClick={() => processFontStyle('italic')}>italic</Button>
-        <Button onClick={() => processTextDecoration('underline')}>
-          underline
-        </Button>
+      <Stack spacing={1} p={3} direction="row" justifyContent="space-between">
+        <Stack spacing={1} direction="row">
+          <Button onClick={() => processFontWeight('bold')}>bold</Button>
+          <Button onClick={() => processFontStyle('italic')}>italic</Button>
+          <Button onClick={() => processTextDecoration('underline')}>
+            underline
+          </Button>
+        </Stack>
+
+        {additionalButton}
       </Stack>
 
       <Paper

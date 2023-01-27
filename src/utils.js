@@ -94,6 +94,37 @@ const getSelectedNodes = (nodes, startNode, endNode) => {
 const setNodeStyle = (styleProp) => (node, value) =>
   (node.style[styleProp] = value);
 
+const getJsonFromNodes = () => {
+  const parentNode = document.getElementById('editor');
+  const nodes = parentNode?.childNodes;
+
+  if (!nodes?.length) return;
+
+  const json = [...nodes].reduce((acc, node) => {
+    const nodeStyles = Object.entries(node.style);
+    const nodeData = {};
+
+    nodeStyles.forEach(([name, value]) => {
+      const valueIsNotEmpty = value !== '';
+      const stylePropNameIsNotNumber = isNaN(name);
+
+      if (valueIsNotEmpty && stylePropNameIsNotNumber) {
+        nodeData[name] = value;
+      }
+
+      nodeData.text = node.textContent;
+    });
+
+    if (Object.keys(nodeData).length) {
+      acc.push(nodeData);
+    }
+
+    return acc;
+  }, []);
+
+  return json;
+};
+
 export {
   divideString,
   removeDuplicatedStyles,
@@ -101,4 +132,5 @@ export {
   getNodeIndex,
   getSelectedNodes,
   setNodeStyle,
+  getJsonFromNodes,
 };
