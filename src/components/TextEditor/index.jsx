@@ -45,6 +45,8 @@ const TextEditor = ({ additionalButton }) => {
   const [startNodeIndex, startNodeIndexSet] = useState();
   const [endNodeIndex, endNodeIndexSet] = useState();
 
+  const isThereSelectedNodes = !!selectedNodes.length & !range.collapsed;
+
   const startOffset = range?.startOffset;
   const endOffset = range?.endOffset;
 
@@ -153,6 +155,8 @@ const TextEditor = ({ additionalButton }) => {
     const removedRepeated = removeDuplicatedStyles(parentNode.childNodes);
     parentNode.innerHTML = '';
     parentNode.append(...removedRepeated);
+
+    selectedNodesSet([]);
   };
 
   const processFontWeight = processTextStyle('fontWeight');
@@ -163,9 +167,22 @@ const TextEditor = ({ additionalButton }) => {
     <Stack>
       <Stack spacing={1} p={3} direction="row" justifyContent="space-between">
         <Stack spacing={1} direction="row">
-          <Button onClick={() => processFontWeight('bold')}>bold</Button>
-          <Button onClick={() => processFontStyle('italic')}>italic</Button>
-          <Button onClick={() => processTextDecoration('underline')}>
+          <Button
+            onClick={() => processFontWeight('bold')}
+            disabled={!isThereSelectedNodes}
+          >
+            bold
+          </Button>
+          <Button
+            onClick={() => processFontStyle('italic')}
+            disabled={!isThereSelectedNodes}
+          >
+            italic
+          </Button>
+          <Button
+            onClick={() => processTextDecoration('underline')}
+            disabled={!isThereSelectedNodes}
+          >
             underline
           </Button>
         </Stack>
