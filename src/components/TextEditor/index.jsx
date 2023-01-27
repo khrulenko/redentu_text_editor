@@ -1,100 +1,12 @@
 import { useEffect, useState } from 'react';
-
-const getNodeIndex = (childNodes, node) => [...childNodes].indexOf(node);
-
-const divideString = (str, indexes) => {
-  let result = [];
-  let prevIdx = 0;
-
-  for (let i = 0; i < indexes.length; i++) {
-    let slicedString = str.slice(prevIdx, indexes[i]);
-
-    if (slicedString.length > 0) {
-      result.push(slicedString);
-    }
-
-    prevIdx = indexes[i];
-  }
-
-  let lastString = str.slice(prevIdx);
-
-  if (lastString.length > 0) {
-    result.push(lastString);
-  }
-
-  return result;
-};
-
-const sortStyles = (styles) =>
-  `${styles}`
-    .split(';')
-    .map((str) => str.trim())
-    .sort()
-    .join(';');
-
-const removeDuplicatedStyles = (nodes) => {
-  let unitedNodes = [...nodes];
-  let wasChanged = false;
-
-  do {
-    wasChanged = false;
-    const newNodes = [];
-
-    for (let i = 0; i < unitedNodes.length; i++) {
-      const node = unitedNodes[i];
-      const nextNode = unitedNodes[i + 1];
-
-      const sortedNodeStyles = sortStyles(node.style.cssText);
-      const sortedNextNodeStyles = sortStyles(nextNode?.style?.cssText);
-
-      if (sortedNodeStyles === sortedNextNodeStyles) {
-        const newNode = node.cloneNode();
-        newNode.textContent = node.textContent + nextNode?.textContent;
-        newNodes.push(newNode);
-
-        i++;
-        wasChanged = true;
-      } else {
-        newNodes.push(node);
-      }
-    }
-
-    unitedNodes = newNodes;
-  } while (wasChanged);
-
-  return unitedNodes;
-};
-
-const getSelectedNodes = (nodes, startNode, endNode) => {
-  const selected = [];
-  let inRange = false;
-
-  nodes.forEach((node) => {
-    if (node === startNode) inRange = true;
-
-    if (inRange) selected.push(node);
-
-    if (node === endNode) inRange = false;
-  });
-
-  return selected;
-};
-
-const divideNode = (node, start, end) => {
-  const text = node.textContent;
-
-  const textParts = divideString(text, [start, end]);
-
-  return textParts.map((textPart) => {
-    const newEl = node.cloneNode();
-    newEl.textContent = textPart;
-
-    return newEl;
-  });
-};
-
-const setNodeStyle = (styleProp) => (node, value) =>
-  (node.style[styleProp] = value);
+import {
+  divideString,
+  removeDuplicatedStyles,
+  divideNode,
+  getNodeIndex,
+  getSelectedNodes,
+  setNodeStyle,
+} from '../../utils';
 
 const handleInput = (e) => {
   const includesSpans = [...e.target.childNodes].some(
@@ -167,27 +79,29 @@ const TextEditor = () => {
     endNodeIndexSet(endIndx);
   };
 
+  const divideNodes = (nodes) =>
+    nodes.map((el, i, arr) => {
+      const isFirst = i === 0;
+      const isLast = el === arr.at(-1);
+      const firstElementEndOffset =
+        arr.length > 1 ? el.textContent.length : endOffset;
+
+      if (isFirst) {
+        return divideNode(el, startOffset, firstElementEndOffset);
+      }
+
+      if (isLast) {
+        return divideNode(el, 0, endOffset);
+      }
+
+      return divideNode(el, 0, el.textContent.length);
+    });
+
   const manageStyle =
     (styleProp) => (chosenNodes, startOffset, endOffset, value) => {
       const setNodeStyleProp = setNodeStyle(styleProp);
 
-      const dividedNodes = chosenNodes.map((el, i, arr) => {
-        const isFirst = i === 0;
-        const isLast = el === arr.at(-1);
-        const firstElementEndOffset =
-          arr.length > 1 ? el.textContent.length : endOffset;
-
-        if (isFirst) {
-          return divideNode(el, startOffset, firstElementEndOffset);
-        }
-
-        if (isLast) {
-          return divideNode(el, 0, endOffset);
-        }
-
-        return divideNode(el, 0, el.textContent.length);
-      });
-
+      const dividedNodes = divideNodes(chosenNodes);
       const newNodes = dividedNodes.flat();
 
       const shouldRemoveStyle = newNodes.every(
@@ -255,7 +169,9 @@ const TextEditor = () => {
         contentEditable
         onMouseUp={handleMouseUp}
         onInput={handleInput}
-      />
+      >
+        <span>Text editor will be here. Just wait a bit.</span>
+      </div>
     </>
   );
 };
