@@ -97,59 +97,57 @@ const TextEditor = () => {
       return divideNode(el, 0, el.textContent.length);
     });
 
-  const manageStyle =
-    (styleProp) => (chosenNodes, startOffset, endOffset, value) => {
-      const setNodeStyleProp = setNodeStyle(styleProp);
+  const manageStyle = (styleProp) => (chosenNodes, value) => {
+    const setNodeStyleProp = setNodeStyle(styleProp);
 
-      const dividedNodes = divideNodes(chosenNodes);
-      const newNodes = dividedNodes.flat();
+    const dividedNodes = divideNodes(chosenNodes);
+    const newNodes = dividedNodes.flat();
 
-      const shouldRemoveStyle = newNodes.every(
-        (node) => node.style[styleProp] === value
-      );
+    const shouldRemoveStyle = newNodes.every(
+      (node) => node.style[styleProp] === value
+    );
 
-      newNodes.forEach((node, i, arr) => {
-        const styleNode = () =>
-          setNodeStyleProp(node, shouldRemoveStyle ? '' : value);
+    newNodes.forEach((node, i, arr) => {
+      const styleNode = () =>
+        setNodeStyleProp(node, shouldRemoveStyle ? '' : value);
 
-        const isSelectionInsideOneNode = chosenNodes.length === 1;
-        const shouldStyleFirstNode = startOffset === 0;
+      const isSelectionInsideOneNode = chosenNodes.length === 1;
+      const shouldStyleFirstNode = startOffset === 0;
 
-        if (isSelectionInsideOneNode) {
-          const styledPartIndex = shouldStyleFirstNode ? 0 : 1;
+      if (isSelectionInsideOneNode) {
+        const styledPartIndex = shouldStyleFirstNode ? 0 : 1;
 
-          if (i === styledPartIndex) {
-            styleNode();
-          }
+        if (i === styledPartIndex) {
+          styleNode();
         }
+      }
 
-        if (chosenNodes.length > 1) {
-          const isFirst = i === 0;
-          const isLast = node === arr.at(-1);
-          const isMiddle = !isFirst && !isLast;
-          const shouldStyleLastNode =
-            endOffset === arr.at(-1).textContent.length;
+      if (chosenNodes.length > 1) {
+        const isFirst = i === 0;
+        const isLast = node === arr.at(-1);
+        const isMiddle = !isFirst && !isLast;
+        const shouldStyleLastNode = endOffset === arr.at(-1).textContent.length;
 
-          const shouldStyleNode =
-            (isFirst && shouldStyleFirstNode) ||
-            (isLast && shouldStyleLastNode) ||
-            isMiddle;
+        const shouldStyleNode =
+          (isFirst && shouldStyleFirstNode) ||
+          (isLast && shouldStyleLastNode) ||
+          isMiddle;
 
-          if (shouldStyleNode) {
-            styleNode();
-          }
+        if (shouldStyleNode) {
+          styleNode();
         }
-      });
+      }
+    });
 
-      const united = removeDuplicatedStyles(newNodes);
-      parentNode.children[startNodeIndex].before(...united);
-      chosenNodes.forEach((el) => el.remove());
-    };
+    const united = removeDuplicatedStyles(newNodes);
+    parentNode.children[startNodeIndex].before(...united);
+    chosenNodes.forEach((el) => el.remove());
+  };
 
   const processTextStyle = (styleProp) => (value) => {
     const manageStyleProp = manageStyle(styleProp);
 
-    manageStyleProp(selectedNodes, startOffset, endOffset, value);
+    manageStyleProp(selectedNodes, value);
 
     const removedRepeated = removeDuplicatedStyles(parentNode.childNodes);
     parentNode.innerHTML = '';
@@ -169,9 +167,7 @@ const TextEditor = () => {
         contentEditable
         onMouseUp={handleMouseUp}
         onInput={handleInput}
-      >
-        <span>Text editor will be here. Just wait a bit.</span>
-      </div>
+      />
     </>
   );
 };
