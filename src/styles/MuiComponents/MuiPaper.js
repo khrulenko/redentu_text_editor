@@ -1,7 +1,7 @@
 const MuiPaper = {
   styleOverrides: {
     root: ({ theme: { spacing } }) => ({
-      height: '500px',
+      minHeight: '60vh',
       minWidth: spacing(3),
 
       padding: spacing(2),
