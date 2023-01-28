@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Button, Paper, Stack } from '@mui/material';
+import { Button, Paper, Stack, Popover } from '@mui/material';
+
 import {
   divideString,
   removeDuplicatedStyles,
@@ -8,6 +9,10 @@ import {
   getSelectedNodes,
   setNodeStyle,
 } from '../../utils';
+import useDisclosure from '../../hooks/useDisclosure';
+import PopoverButton from '../PopoverButton';
+import ColorPoint from '../ColorPoint';
+import { colorsList } from '../../styles/theme';
 
 const handleInput = (e) => {
   const includesSpans = [...e.target.childNodes].some(
@@ -162,6 +167,17 @@ const TextEditor = ({ additionalButton }) => {
   const processFontWeight = processTextStyle('fontWeight');
   const processFontStyle = processTextStyle('fontStyle');
   const processTextDecoration = processTextStyle('textDecoration');
+  const processTextColor = processTextStyle('color');
+  const processTextBackgroundColor = processTextStyle('backgroundColor');
+
+  const createColorPoints = (colorsList, handler) =>
+    colorsList.map((colorMap) => {
+      const colorValues = Object.entries(colorMap);
+
+      return colorValues.map(([key, color]) => (
+        <ColorPoint key={key} color={color} handler={handler} />
+      ));
+    });
 
   return (
     <Stack>
@@ -185,6 +201,14 @@ const TextEditor = ({ additionalButton }) => {
           >
             underline
           </Button>
+
+          <PopoverButton name="Color" disabled={!isThereSelectedNodes}>
+            {createColorPoints(colorsList, processTextColor)}
+          </PopoverButton>
+
+          <PopoverButton name="Background" disabled={!isThereSelectedNodes}>
+            {createColorPoints(colorsList, processTextBackgroundColor)}
+          </PopoverButton>
         </Stack>
 
         {additionalButton}
