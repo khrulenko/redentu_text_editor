@@ -122,6 +122,8 @@ const getJsonFromNodes = () => {
     return acc;
   }, []);
 
+  console.log('Your JSON:', json);
+
   return json;
 };
 

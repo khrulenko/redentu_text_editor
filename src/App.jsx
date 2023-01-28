@@ -18,7 +18,9 @@ function App() {
       <TextEditor additionalButton={additionalButton} />
 
       <Dialog open={isOpen} onClose={onClose}>
-        <DialogTitle>Your JSON is done</DialogTitle>
+        <DialogTitle>
+          Your JSON is here {'('}you can also find it in the console{')'}:
+        </DialogTitle>
         {JSON.stringify(getJsonFromNodes())}
       </Dialog>
     </MainLayout>

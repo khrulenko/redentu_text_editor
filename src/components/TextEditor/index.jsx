@@ -217,7 +217,7 @@ const TextEditor = ({ additionalButton }) => {
       <Paper
         id="editor"
         contentEditable
-        onMouseUp={handleMouseUp}
+        onSelect={handleMouseUp}
         onInput={handleInput}
       />
     </Stack>
